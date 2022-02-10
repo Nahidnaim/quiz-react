@@ -7,6 +7,7 @@ import Quiz from "./pages/Quiz";
 import Result from "./pages/Result";
 import { Routes, Route } from "react-router-dom";
 import { AuthProvider } from "../contexts/AuthContext";
+import PrivateOutlet from "./PrivateOutlet";
 
 function App() {
   return (
@@ -17,8 +18,10 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/quiz" element={<Quiz />} />
-          <Route path="/result" element={<Result />} />
+          <Route path="/*" element={<PrivateOutlet />}>
+            <Route path="quiz/:id" element={<Quiz />} />
+            <Route path="result/:id" element={<Result />} />
+          </Route>
         </Routes>
       </Layout>
     </AuthProvider>

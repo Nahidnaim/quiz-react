@@ -1,25 +1,40 @@
 import classes from "../styles/Progressbar.module.css";
 import Button from "../components/Button";
-import { Link } from "react-router-dom";
+import {useRef, useState} from "react";
 
-export default function ProgressBar() {
+export default function ProgressBar({next, prev, submit, progress}) {
+  const [tooltip, setTooltip] = useState()
+  const tooltipRef = useRef()
+    function toggleTooltip () {
+      if(tooltip){
+          setTooltip(false)
+          tooltipRef.current.style.display = "none"
+      } else {
+          setTooltip(true)
+          tooltipRef.current.style.left = `calc(${progress}% - 65px)`
+          tooltipRef.current.style.display = "block"
+      }
+    }
+
   return (
     <div className={classes.progressBar}>
-      <div className={classes.backButton}>
+      <div className={classes.backButton} onClick={prev}>
         <span className="material-icons-outlined"> arrow_back </span>
       </div>
       <div className={classes.rangeArea}>
-        <div className={classes.tooltip}>24% Cimplete!</div>
+        <div className={classes.tooltip} ref={tooltipRef} > {progress}% Complete! </div>
         <div className={classes.rangeBody}>
-          <div className={classes.progress} style={{ width: "20%" }}></div>
+          <div className={classes.progress}
+               style={{ width: `${progress}%` }}
+               onMouseOver={toggleTooltip}
+               onMouseOut={toggleTooltip}
+          ></div>
         </div>
       </div>
-      <Link to="/result">
-        <Button className={classes.next}>
-          <span>Next Question</span>
+        <Button className={classes.next} onClick={progress === 100 ? submit : next}>
+          <span>{progress === 100 ? "Submit Quiz" : "Next Question"}</span>
           <span className="material-icons-outlined"> arrow_forward </span>
         </Button>
-      </Link>
     </div>
   );
 }
